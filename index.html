@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ebenezerr Construction & Development</title>
+    <link rel="icon" href="logo.jpeg" type="image/jpeg">
+    <style>
+        /* --- ESTILOS GENERALES Y NAVEGACIÓN --- */
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; color: #333; background-color: #f8f9fa; }
+        h1, h2, h3 { text-align: center; color: #1a2b4c; }
+        img { max-width: 100%; height: auto; border-radius: 4px; }
+        
+        /* HEADER DINÁMICO */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; position: fixed; top: 0; width: 100%; z-index: 1000; box-sizing: border-box; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: all 0.4s ease; }
+        header.scrolled { background-color: rgba(255, 255, 255, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 15px 50px; }
+        
+        .logo { font-size: 24px; font-weight: bold; color: #1a2b4c; display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        nav a { text-decoration: none; color: #333; margin: 0 15px; font-weight: 600; text-transform: uppercase; font-size: 14px; transition: color 0.3s ease; }
+        nav a:hover { color: #1a2b4c; }
+
+        /* --- HERO Y VIDEO --- */
+        .hero-scroll { height: 400vh; position: relative; }
+        .sticky-container { position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .bg-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; object-fit: cover; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(26, 43, 76, 0.45); z-index: 0; }
+        .hero-content { position: relative; z-index: 1; text-align: center; padding: 20px; margin-top: 50px; }
+        .hero-title { color: white; font-size: 48px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        .hero-subtitle { color: white; font-size: 20px; font-weight: 300; }
+        
+        /* --- CLASE DE ANIMACIÓN AL HACER SCROLL --- */
+        .fade-in { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* --- SECCIÓN EXPERTISE PREMIUM --- */
+        .expertise { padding: 100px 20px; background-color: #f1f3f5; position: relative; z-index: 2; }
+        .expertise h2 { font-size: 36px; margin-bottom: 50px; letter-spacing: 1px; }
+        .services-grid { display: flex; justify-content: center; gap: 40px; max-width: 1200px; margin: 0 auto; flex-wrap: wrap; }
+        
+        .service-card { flex: 1; min-width: 300px; text-align: center; padding: 50px 30px 40px; border: none; border-top: 5px solid #1a2b4c; border-radius: 8px; background-color: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: transform 0.4s ease, box-shadow 0.4s ease; }
+        .service-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+        
+        .icon-wrapper { width: 80px; height: 80px; margin: 0 auto 25px; background-color: rgba(26, 43, 76, 0.06); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background-color 0.4s ease; }
+        .icon-wrapper svg { width: 40px; height: 40px; fill: #1a2b4c; transition: fill 0.4s ease, transform 0.4s ease; }
+        .service-card:hover .icon-wrapper { background-color: #1a2b4c; }
+        .service-card:hover .icon-wrapper svg { fill: #ffffff; transform: scale(1.1); }
+        
+        .service-card h3 { font-size: 22px; margin-bottom: 15px; color: #1a2b4c; }
+        .service-card p { color: #666; line-height: 1.6; font-size: 15px; margin: 0; }
+
+        /* --- PORTAFOLIO Y PROYECTOS --- */
+        .projects { padding: 100px 20px; position: relative; z-index: 2; background-color: #f8f9fa; }
+        .projects h2 { font-size: 36px; margin-bottom: 10px; }
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 40px auto 0; }
+        .project-card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }
+        .project-card h4 { margin: 15px 0 10px; color: #1a2b4c; font-size: 20px; }
+        .project-card p { color: #555; line-height: 1.6; font-size: 14px; margin-bottom: 20px; }
+        
+        /* --- CARRUSEL DE IMÁGENES --- */
+        .carousel-container { position: relative; width: 100%; height: 250px; overflow: hidden; border-radius: 6px; background-color: #eee; }
+        .carousel-track { display: flex; height: 100%; transition: transform 0.4s ease-in-out; }
+        .carousel-track img { min-width: 100%; height: 100%; object-fit: cover; }
+        .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(26, 43, 76, 0.7); color: white; border: none; width: 35px; height: 35px; cursor: pointer; z-index: 10; border-radius: 50%; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
+        .carousel-btn:hover { background: rgba(26, 43, 76, 1); }
+        .carousel-btn.prev { left: 10px; }
+        .carousel-btn.next { right: 10px; }
+
+        .btn { display: inline-block; padding: 12px 20px; background-color: #1a2b4c; color: #fff; text-decoration: none; border-radius: 4px; font-size: 14px; text-align: center; font-weight: 600; transition: background 0.3s ease; width: 100%; box-sizing: border-box; }
+        .btn:hover { background-color: #2c4270; }
+
+        .view-all-container { text-align: center; margin-top: 50px; }
+        .btn-large { display: inline-block; padding: 15px 40px; background-color: #25D366; color: #fff; text-decoration: none; border-radius: 5px; font-size: 18px; font-weight: bold; text-transform: uppercase; transition: transform 0.3s ease, background 0.3s ease; box-shadow: 0 4px 10px rgba(37,211,102,0.3); }
+        .btn-large:hover { background-color: #1da851; transform: scale(1.05); }
+
+        /* --- MEDALLAS DE CONFIANZA (NUEVO TEAM) --- */
+        .team { padding: 100px 20px; background-color: #ffffff; text-align: center; position: relative; z-index: 2; border-top: 1px solid #e9ecef; }
+        .team h2 { font-size: 36px; margin-bottom: 20px; }
+        .team-content { max-width: 850px; margin: 0 auto 40px; font-size: 17px; line-height: 1.7; color: #555; }
+        .trust-badges { display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; max-width: 1000px; margin: 0 auto; }
+        .badge { display: flex; flex-direction: column; align-items: center; width: 200px; }
+        .badge-icon { background: #1a2b4c; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .badge h4 { color: #1a2b4c; margin: 0 0 5px; font-size: 18px; }
+        .badge p { color: #666; font-size: 14px; margin: 0; }
+
+        /* --- TESTIMONIOS (NUEVA SECCIÓN) --- */
+        .testimonials { padding: 100px 20px; background-color: #f1f3f5; position: relative; z-index: 2; }
+        .testimonials h2 { font-size: 36px; margin-bottom: 50px; }
+        .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+        .testi-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .stars { color: #f5b301; font-size: 20px; margin-bottom: 15px; }
+        .testi-card p { color: #555; font-style: italic; line-height: 1.6; margin-bottom: 20px; }
+        .testi-card h5 { color: #1a2b4c; font-size: 16px; margin: 0; font-weight: bold; }
+        .testi-card span { color: #888; font-size: 13px; }
+
+        /* --- FOOTER --- */
+        footer { background-color: #1a2b4c; color: #fff; padding: 60px 50px 20px; position: relative; z-index: 2; }
+        .footer-content { display: flex; justify-content: space-between; max-width: 1200px; margin: 0 auto; gap: 40px; flex-wrap: wrap; }
+        .contact-info, .contact-form, .map-container { flex: 1; min-width: 280px; }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: none; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
+        .contact-form button { background-color: #66728a; color: white; border: none; padding: 12px 25px; cursor: pointer; border-radius: 4px; font-weight: bold; transition: background 0.3s ease; width: 100%; }
+        .contact-form button:hover { background-color: #4a5a75; }
+
+        /* --- BOTÓN FLOTANTE WHATSAPP --- */
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background-color: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 2px 2px 10px rgba(0,0,0,0.3); z-index: 1000; transition: transform 0.3s ease; }
+        .whatsapp-float:hover { transform: scale(1.1); }
+        .whatsapp-float svg { width: 35px; height: 35px; fill: white; }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            header { flex-direction: column; padding: 15px 20px; gap: 15px; }
+            header.scrolled { padding: 15px 20px; }
+            .logo { font-size: 20px; text-align: center; flex-direction: column; }
+            .logo img { height: 40px !important; }
+            nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+            nav a { margin: 0 5px; font-size: 12px; }
+            .hero-title { font-size: 32px !important; }
+            .hero-subtitle { font-size: 16px !important; }
+            .expertise, .projects, .team, .testimonials, footer { padding: 60px 15px; }
+            footer h3 { font-size: 22px; margin-bottom: 30px !important; }
+            .footer-content { gap: 40px; }
+            .whatsapp-float { width: 50px; height: 50px; bottom: 20px; right: 20px; }
+            .whatsapp-float svg { width: 30px; height: 30px; }
+        }
+    </style>
+</head>
+<body id="home">
+
+    <header id="main-header">
+        <a href="#home" class="logo">
+            <img src="logo.jpeg" alt="Ebenezer Logo" style="height: 50px;">
+            <span>EBENEZERR <span style="font-size: 14px; font-weight: normal; margin-left: 5px; display:inline-block;">Construction & Development</span></span>
+        </a>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#services">Services</a>
+            <a href="#projects">Projects</a>
+            <a href="#team">Why Us</a>
+            <a href="#contact">Contact Us</a>
+        </nav>
+    </header>
+
+    <section class="hero-scroll" id="scroll-section">
+        <div class="sticky-container">
+            <video class="bg-video" muted playsinline preload="auto">
+                <source src="video-fondo.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1 class="hero-title fade-in">BUILDING YOUR VISION</h1>
+                <p class="hero-subtitle fade-in">Scroll down to see our process</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN EXPERTISE RENOVADA -->
+    <section class="expertise" id="services">
+        <h2 class="fade-in">OUR EXPERTISE</h2>
+        <div class="services-grid">
+            <div class="service-card fade-in">
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 576 512"><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/></svg>
+                </div>
+                <h3>Residential Construction</h3>
+                <p>High-quality residential construction tailored to meet your family's needs and lifestyle.</p>
+            </div>
+            
+            <div class="service-card fade-in">
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 512 512"><path d="M78.6 5C69.1-2.4 55.6-1.5 47 7L7 47c-8.5 8.5-9.4 22-2.1 31.6l80 104c4.5 5.9 11.6 9.4 19 9.4h54.1l109 109c-14.7 29-10 65.4 14.3 89.6l112 112c12.5 12.5 32.8 12.5 45.3 0l64-64c12.5-12.5 12.5-32.8 0-45.3l-112-112c-24.2-24.2-60.6-29-89.6-14.3l-109-109V104c0-7.5-3.5-14.6-9.4-19L78.6 5zM19.9 396.1C7.2 408.8 0 426.1 0 444.1C0 481.6 30.4 512 67.9 512c18 0 35.3-7.2 48-19.9L233.7 374.3c-7.8-20.9-9-43.6-3.6-65.1l-61.7-61.7L19.9 396.1zM512 144c0-10.5-1.1-20.7-3.2-30.5-2.4-11.2-16.1-14.1-24.2-6l-63.9 63.9c-3 3-7.1 4.7-11.3 4.7H352c-8.8 0-16-7.2-16-16V102.6c0-4.2 1.7-8.3 4.7-11.3l63.9-63.9c8.1-8.1 5.2-21.8-6-24.2C388.7 1.1 378.5 0 368 0C288.5 0 224 64.5 224 144l0 .8 85.3 85.3c36-9.1 75.8 .5 104 28.7L429 274.5c49-23 83-72.8 83-130.5zM56 432a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"/></svg>
+                </div>
+                <h3>Remodeling & Renovation</h3>
+                <p>Breathe new life into your spaces. Expert carpentry, interior remodeling, and modern upgrades.</p>
+            </div>
+            
+            <div class="service-card fade-in">
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 384 512"><path d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
+                </div>
+                <h3>Site Development</h3>
+                <p>Comprehensive exterior remodeling, siding, masonry foundations, and site development.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROYECTOS -->
+    <section class="projects" id="projects">
+        <h2 class="fade-in">RECENTLY COMPLETED PROJECTS</h2>
+        <div class="projects-grid">
+            
+            <div class="project-card fade-in">
+                <div class="carousel-container">
+                    <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
+                    <div class="carousel-track" data-index="0">
+                        <img src="exterior 1.jpeg" alt="Exterior 1" onerror="this.remove()">
+                        <img src="exterior 2.jpeg" alt="Exterior 2" onerror="this.remove()">
+                        <img src="exterior 3.jpeg" alt="Exterior 3" onerror="this.remove()">
+                        <img src="exterior 4.jpeg" alt="Exterior 4" onerror="this.remove()">
+                        <img src="exterior 5.jpeg" alt="Exterior 5" onerror="this.remove()">
+                        <img src="exterior 6.jpeg" alt="Exterior 6" onerror="this.remove()">
+                        <img src="exterior 7.jpeg" alt="Exterior 7" onerror="this.remove()">
+                        <img src="exterior 8.jpeg" alt="Exterior 8" onerror="this.remove()">
+                        <img src="exterior 9.jpeg" alt="Exterior 9" onerror="this.remove()">
+                        <img src="exterior 10.jpeg" alt="Exterior 10" onerror="this.remove()">
+                        <img src="exterior 11.jpeg" alt="Exterior 11" onerror="this.remove()">
+                        <img src="exterior 12.jpeg" alt="Exterior 12" onerror="this.remove()">
+                        <img src="exterior 13.jpeg" alt="Exterior 13" onerror="this.remove()">
+                        <img src="exterior 14.jpeg" alt="Exterior 14" onerror="this.remove()">
+                        <img src="exterior 15.jpeg" alt="Exterior 15" onerror="this.remove()">
+                    </div>
+                    <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
+                </div>
+                <div>
+                    <h4>Exterior Remodeling & Facelifts</h4>
+                    <p>Complete exterior transformations. Our process involves repairing structural framework, installing waterproof barriers, and applying premium stone veneer masonry or modern vertical siding for maximum durability, weather resistance, and curb appeal.</p>
+                </div>
+                <a href="#contact" class="btn">Get an Estimate</a>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="carousel-container">
+                    <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
+                    <div class="carousel-track" data-index="0">
+                        <img src="ceramica 1.jpeg" alt="Ceramica 1" onerror="this.remove()">
+                        <img src="ceramica 2.jpeg" alt="Ceramica 2" onerror="this.remove()">
+                        <img src="ceramica 3.jpeg" alt="Ceramica 3" onerror="this.remove()">
+                        <img src="ceramica 4.jpeg" alt="Ceramica 4" onerror="this.remove()">
+                        <img src="ceramica 5.jpeg" alt="Ceramica 5" onerror="this.remove()">
+                        <img src="ceramica 6.jpeg" alt="Ceramica 6" onerror="this.remove()">
+                        <img src="ceramica 7.jpeg" alt="Ceramica 7" onerror="this.remove()">
+                        <img src="ceramica 8.jpeg" alt="Ceramica 8" onerror="this.remove()">
+                        <img src="ceramica 9.jpeg" alt="Ceramica 9" onerror="this.remove()">
+                        <img src="ceramica 10.jpeg" alt="Ceramica 10" onerror="this.remove()">
+                        <img src="ceramica 11.jpeg" alt="Ceramica 11" onerror="this.remove()">
+                        <img src="ceramica 12.jpeg" alt="Ceramica 12" onerror="this.remove()">
+                        <img src="ceramica 13.jpeg" alt="Ceramica 13" onerror="this.remove()">
+                        <img src="ceramica 14.jpeg" alt="Ceramica 14" onerror="this.remove()">
+                        <img src="ceramica 15.jpeg" alt="Ceramica 15" onerror="this.remove()">
+                    </div>
+                    <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
+                </div>
+                <div>
+                    <h4>Premium Tile & Flooring</h4>
+                    <p>High-precision tile and flooring installations. We start with rigorous subfloor leveling and waterproofing membranes, followed by laser-aligned tile setting and epoxy grouting to ensure a flawless, water-tight, and long-lasting finish.</p>
+                </div>
+                <a href="#contact" class="btn">Get an Estimate</a>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="carousel-container">
+                    <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
+                    <div class="carousel-track" data-index="0">
+                        <img src="beams 1.jpeg" alt="Beams 1" onerror="this.remove()">
+                        <img src="beams 2.jpeg" alt="Beams 2" onerror="this.remove()">
+                        <img src="beams 3.jpeg" alt="Beams 3" onerror="this.remove()">
+                        <img src="beams 4.jpeg" alt="Beams 4" onerror="this.remove()">
+                        <img src="beams 5.jpeg" alt="Beams 5" onerror="this.remove()">
+                        <img src="beams 6.jpeg" alt="Beams 6" onerror="this.remove()">
+                        <img src="beams 7.jpeg" alt="Beams 7" onerror="this.remove()">
+                        <img src="beams 8.jpeg" alt="Beams 8" onerror="this.remove()">
+                        <img src="beams 9.jpeg" alt="Beams 9" onerror="this.remove()">
+                        <img src="beams 10.jpeg" alt="Beams 10" onerror="this.remove()">
+                        <img src="beams 11.jpeg" alt="Beams 11" onerror="this.remove()">
+                        <img src="beams 12.jpeg" alt="Beams 12" onerror="this.remove()">
+                        <img src="beams 13.jpeg" alt="Beams 13" onerror="this.remove()">
+                        <img src="beams 14.jpeg" alt="Beams 14" onerror="this.remove()">
+                        <img src="beams 15.jpeg" alt="Beams 15" onerror="this.remove()">
+                    </div>
+                    <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
+                </div>
+                <div>
+                    <h4>Structural Beams & Framing</h4>
+                    <p>Custom structural framing and beam installations. We handle heavy load-bearing steel and aesthetic wooden beams, ensuring perfect architectural alignment, strict code compliance, and uncompromising structural integrity for open-concept spaces.</p>
+                </div>
+                <a href="#contact" class="btn">Get an Estimate</a>
+            </div>
+
+            <div class="project-card fade-in">
+                <div class="carousel-container">
+                    <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
+                    <div class="carousel-track" data-index="0">
+                        <img src="chimenea 1.jpeg" alt="Chimenea 1" onerror="this.remove()">
+                        <img src="chimenea 2.jpeg" alt="Chimenea 2" onerror="this.remove()">
+                        <img src="chimenea 3.jpeg" alt="Chimenea 3" onerror="this.remove()">
+                        <img src="chimenea 4.jpeg" alt="Chimenea 4" onerror="this.remove()">
+                        <img src="chimenea 5.jpeg" alt="Chimenea 5" onerror="this.remove()">
+                        <img src="chimenea 6.jpeg" alt="Chimenea 6" onerror="this.remove()">
+                        <img src="chimenea 7.jpeg" alt="Chimenea 7" onerror="this.remove()">
+                        <img src="chimenea 8.jpeg" alt="Chimenea 8" onerror="this.remove()">
+                        <img src="chimenea 9.jpeg" alt="Chimenea 9" onerror="this.remove()">
+                        <img src="chimenea 10.jpeg" alt="Chimenea 10" onerror="this.remove()">
+                        <img src="chimenea 11.jpeg" alt="Chimenea 11" onerror="this.remove()">
+                        <img src="chimenea 12.jpeg" alt="Chimenea 12" onerror="this.remove()">
+                        <img src="chimenea 13.jpeg" alt="Chimenea 13" onerror="this.remove()">
+                        <img src="chimenea 14.jpeg" alt="Chimenea 14" onerror="this.remove()">
+                        <img src="chimenea 15.jpeg" alt="Chimenea 15" onerror="this.remove()">
+                    </div>
+                    <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
+                </div>
+                <div>
+                    <h4>Bespoke Fireplace Builds</h4>
+                    <p>Custom fireplace design and construction. From safe firebox and flue installation to framing and bespoke finishing with heat-resistant stone, brick, or luxury tile, creating a stunning and safe architectural focal point for your home.</p>
+                </div>
+                <a href="#contact" class="btn">Get an Estimate</a>
+            </div>
+            
+            <div class="project-card fade-in">
+                <div class="carousel-container">
+                    <button class="carousel-btn prev" onclick="moveSlide(this, -1)">&#10094;</button>
+                    <div class="carousel-track" data-index="0">
+                        <img src="shelves 1.jpeg" alt="Shelves 1" onerror="this.remove()">
+                        <img src="shelves 2.jpeg" alt="Shelves 2" onerror="this.remove()">
+                        <img src="shelves 3.jpeg" alt="Shelves 3" onerror="this.remove()">
+                        <img src="shelves 4.jpeg" alt="Shelves 4" onerror="this.remove()">
+                        <img src="shelves 5.jpeg" alt="Shelves 5" onerror="this.remove()">
+                        <img src="shelves 6.jpeg" alt="Shelves 6" onerror="this.remove()">
+                        <img src="shelves 7.jpeg" alt="Shelves 7" onerror="this.remove()">
+                        <img src="shelves 8.jpeg" alt="Shelves 8" onerror="this.remove()">
+                        <img src="shelves 9.jpeg" alt="Shelves 9" onerror="this.remove()">
+                        <img src="shelves 10.jpeg" alt="Shelves 10" onerror="this.remove()">
+                        <img src="shelves 11.jpeg" alt="Shelves 11" onerror="this.remove()">
+                        <img src="shelves 12.jpeg" alt="Shelves 12" onerror="this.remove()">
+                        <img src="shelves 13.jpeg" alt="Shelves 13" onerror="this.remove()">
+                        <img src="shelves 14.jpeg" alt="Shelves 14" onerror="this.remove()">
+                        <img src="shelves 15.jpeg" alt="Shelves 15" onerror="this.remove()">
+                    </div>
+                    <button class="carousel-btn next" onclick="moveSlide(this, 1)">&#10095;</button>
+                </div>
+                <div>
+                    <h4>Custom Shelving & Storage</h4>
+                    <p>Bespoke shelving and built-in cabinetry solutions. We design and install highly durable, custom-fit wood storage systems perfectly tailored to organize and elevate your living spaces, walk-in closets, and home offices.</p>
+                </div>
+                <a href="#contact" class="btn">Get an Estimate</a>
+            </div>
+        </div>
+        
+        <div class="view-all-container fade-in">
+            <a href="portfolio.html" class="btn-large">View Full Portfolio 📸</a>
+        </div>
+    </section>
+
+    <!-- MEDALLAS DE CONFIANZA -->
+    <section class="team" id="team">
+        <h2 class="fade-in">WHY CHOOSE EBENEZERR?</h2>
+        <div class="team-content fade-in">
+            <p>At <strong>Ebenezerr Construction & Development</strong>, our strength lies in precision craftsmanship and structural expertise. We deliver high-standard residential solutions built to the rigorous codes and demanding standards of modern homes in the USA.</p>
+        </div>
+        <div class="trust-badges fade-in">
+            <div class="badge">
+                <div class="badge-icon">🏗️</div>
+                <h4>Expert Builders</h4>
+                <p>Highly trained structural crew.</p>
+            </div>
+            <div class="badge">
+                <div class="badge-icon">📜</div>
+                <h4>Fully Licensed</h4>
+                <p>Licensed, bonded, and insured.</p>
+            </div>
+            <div class="badge">
+                <div class="badge-icon">⭐</div>
+                <h4>100% Satisfaction</h4>
+                <p>Committed to perfection.</p>
+            </div>
+            <div class="badge">
+                <div class="badge-icon">💎</div>
+                <h4>Premium Quality</h4>
+                <p>We use top-grade materials.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIOS -->
+    <section class="testimonials">
+        <h2 class="fade-in">WHAT OUR CLIENTS SAY</h2>
+        <div class="testi-grid">
+            <div class="testi-card fade-in">
+                <div class="stars">★★★★★</div>
+                <p>"Ebenezerr transformed our exterior completely. The stone veneer work was flawless and done right on schedule. Highly recommended!"</p>
+                <h5>Sarah Jenkins</h5>
+                <span>Homeowner, Residential Project</span>
+            </div>
+            <div class="testi-card fade-in">
+                <div class="stars">★★★★★</div>
+                <p>"Their attention to detail during our custom shelving installation was incredible. The team was professional, clean, and delivered exactly what we envisioned."</p>
+                <h5>Mark O'Connor</h5>
+                <span>Interior Remodel</span>
+            </div>
+            <div class="testi-card fade-in">
+                <div class="stars">★★★★★</div>
+                <p>"We hired them for a structural beam installation. They handled the permits, the heavy lifting, and made the whole process stress-free."</p>
+                <h5>David & Elena Rios</h5>
+                <span>Structural Renovation</span>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <h3 class="fade-in" style="color: white; margin-bottom: 40px;">BUILDING DREAMS ACROSS THE USA. START YOUR PROJECT TODAY</h3>
+        <div class="footer-content fade-in">
+            <div class="contact-info">
+                <h4>Ebenezerr, trusted construction</h4>
+                <p>Licensed & Insured</p>
+                <br>
+                <p>
+                    <a href="https://wa.me/19109619061" target="_blank" style="color: #25D366; text-decoration: none; font-weight: bold; font-size: 18px; display: inline-block; margin-bottom: 5px;">
+                        💬 WhatsApp: +1 (910) 961-9061
+                    </a>
+                </p>
+                <p>
+                    ✉️ <a href="mailto:ebenezercontrucciones38@gmail.com" style="color: white; text-decoration: none; word-break: break-all;">
+                        ebenezercontrucciones38@gmail.com
+                    </a>
+                </p>
+                <p style="margin-top: 15px;">📍 Columbus, USA</p>
+            </div>
+            
+            <div class="contact-form">
+                <h4>CONTACT US</h4>
+                <form action="https://formspree.io/f/mwlegnre" method="POST">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="email" placeholder="Your Email" required>
+                    <textarea name="message" rows="4" placeholder="Describe your project..." required></textarea>
+                    <button type="submit">Submit Request</button>
+                </form>
+            </div>
+
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d648892.3851619095!2d-94.29793787035915!3d38.85131251759339!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x87c15cbf324ee1a1%3A0xc4dde344143af5fd!2sMunicipio%20de%20Columbus%2C%20Misuri%2064019%2C%20EE.%20UU.!5e0!3m2!1ses-419!2scl!4v1787691463458!5m2!1ses-419!2scl" width="100%" height="250" style="border:0; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- ANIMACIÓN DEL HEADER AL BAJAR ---
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // --- ANIMACIONES FADE-IN AL HACER SCROLL ---
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+
+        // --- SCRIPT PARA EL SCROLL DEL VIDEO DE FONDO ---
+        const videos = document.querySelectorAll('.bg-video');
+        const scrollSection = document.getElementById('scroll-section');
+
+        videos.forEach(video => {
+            video.addEventListener('loadedmetadata', function() {
+                window.addEventListener('scroll', () => {
+                    let scrollPosition = window.scrollY - scrollSection.offsetTop;
+                    let maxScroll = scrollSection.scrollHeight - window.innerHeight;
+                    let scrollPercentage = scrollPosition / maxScroll;
+                    
+                    if (scrollPercentage < 0) scrollPercentage = 0;
+                    if (scrollPercentage > 1) scrollPercentage = 1;
+
+                    window.requestAnimationFrame(() => {
+                        if(video.duration) { video.currentTime = video.duration * scrollPercentage; }
+                    });
+                });
+            });
+        });
+
+        // --- SCRIPT PARA LOS CARRUSELES DE IMÁGENES ---
+        function moveSlide(btn, direction) {
+            const track = btn.parentElement.querySelector('.carousel-track');
+            const images = track.querySelectorAll('img');
+            const totalImages = images.length;
+            
+            if (totalImages === 0) return; 
+            
+            let currentIndex = parseInt(track.getAttribute('data-index'));
+            currentIndex += direction;
+            
+            if (currentIndex < 0) {
+                currentIndex = totalImages - 1;
+            } else if (currentIndex >= totalImages) {
+                currentIndex = 0;
+            }
+            
+            track.setAttribute('data-index', currentIndex);
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+    </script>
+
+    <!-- BOTÓN FLOTANTE DE WHATSAPP -->
+    <a href="https://wa.me/19109619061" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157.1zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+        </svg>
+    </a>
+</body>
+</html>
